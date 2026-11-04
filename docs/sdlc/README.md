@@ -5,7 +5,7 @@
 <!-- sdlc:auto:start overview -->
 event booking app
 
-**Documentation version:** v2
+**Documentation version:** v3
 <!-- sdlc:auto:end overview -->
 
 ## Contents
@@ -15,14 +15,14 @@ event booking app
 |---|---|
 | [Requirements](requirements/README.md) | v1 approved |
 | [Architecture](architecture/README.md) | 28 entries |
-| [Development](development/README.md) | 1 entry |
+| [Development](development/README.md) | 37 entries |
 | [Testing](testing/README.md) | 1 entry |
 | [Deployment](deployment/README.md) | 1 entry |
 | [Maintenance](maintenance/README.md) | 1 entry |
 | [Data model](architecture/data-model.md) | generated |
 | [API (OpenAPI)](architecture/api/openapi.yaml) | generated |
 | [Decisions (ADRs)](architecture/adr/README.md) | 4 decisions |
-| [Sprint plan](development/sprint-plan.md) | not generated yet |
+| [Sprint plan](development/sprint-plan.md) | 6 sprints |
 | [Developer guide](development/developer-guide.md) | not generated yet |
 | [API reference](development/api-reference.md) | 0 routes |
 | [Test report](testing/test-report.md) | not run yet |
@@ -31,7 +31,7 @@ event booking app
 | [Runbook](deployment/runbook.md) | not deployed yet |
 | [Release notes](deployment/release-notes.md) | 0 releases |
 | [Traceability matrix](traceability-matrix.md) | 23 requirements |
-| [Changelog](CHANGELOG.md) | 2 versions |
+| [Changelog](CHANGELOG.md) | 3 versions |
 <!-- sdlc:auto:end contents -->
 
 ## Open gaps
@@ -57,7 +57,18 @@ event booking app
 
 ### Development
 
-- Development phase has not started; no sprint plans, tickets, or code-level records exist to document.
+- Input does not specify which exact backlog item IDs are assigned to this sprint; mapping to EPIC-001/002/008 is thematic inference from the sprint goal text only.
+- No sprint execution status (started/completed, velocity achieved) provided.
+- Input does not specify which exact backlog item IDs are assigned to this sprint; mapping is thematic inference only.
+- No sprint execution status provided.
+- No implementation/completion status for the epic or its child stories provided.
+- No implementation/completion status for the epic or its child stories/tasks provided.
+- Input does not list other DPDP obligations (e.g. data access/erasure requests, breach notification) beyond consent capture/withdrawal; coverage of broader DPDP requirements cannot be confirmed from this input.
+- No implementation status, code, or completion evidence provided.
+- Not explicitly mapped to a sprint number in the input.
+- No implementation status, code, or completion evidence provided for the story or its sub-tasks.
+- Specific DPDP consent-capture requirements (what must be disclosed/recorded) are not detailed in this input beyond the story title.
+- Specific mechanism for consent withdrawal is not detailed in this input beyond the story title.
 
 ### Testing
 
