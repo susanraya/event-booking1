@@ -5,7 +5,7 @@
 <!-- sdlc:auto:start overview -->
 event booking app
 
-**Documentation version:** v3
+**Documentation version:** v4
 <!-- sdlc:auto:end overview -->
 
 ## Contents
@@ -27,11 +27,11 @@ event booking app
 | [API reference](development/api-reference.md) | 1 route |
 | [Test report](testing/test-report.md) | not run yet |
 | [Tests](testing/test-cases.md) | 0 tests |
-| [Deployment guide](deployment/deployment-guide.md) | not deployed yet |
-| [Runbook](deployment/runbook.md) | not deployed yet |
-| [Release notes](deployment/release-notes.md) | 0 releases |
+| [Deployment guide](deployment/deployment-guide.md) | deployed |
+| [Runbook](deployment/runbook.md) | deployed |
+| [Release notes](deployment/release-notes.md) | 1 release |
 | [Traceability matrix](traceability-matrix.md) | 23 requirements |
-| [Changelog](CHANGELOG.md) | 3 versions |
+| [Changelog](CHANGELOG.md) | 4 versions |
 <!-- sdlc:auto:end contents -->
 
 ## Open gaps
@@ -76,7 +76,13 @@ event booking app
 
 ### Deployment
 
-- No deployment recorded yet; no release, environment, or rollout information exists to document.
+- No deployment date/timestamp given.
+- No record of who approved or executed this deployment.
+- No release notes or list of requirement/ticket ids (e.g. US-001..US-023) included in this version -- cannot establish traceability from this deployment back to specific requirements.
+- No rollback plan or previous-version reference recorded.
+- No environment/configuration details (env vars, infra, region) recorded.
+- No post-deployment verification, smoke test, or health-check results recorded.
+- No confirmation that a testing phase preceded this deployment -- testing phase input was not supplied alongside this deployment record.
 
 ### Maintenance
 
