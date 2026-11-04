@@ -2,6 +2,630 @@
 openapi: 3.1.0
 info:
   title: event bookingf
-  version: architecture-v0
+  version: architecture-v1
   description: Designed API from the approved architecture (not extracted from code).
-paths: {}
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate with email/password; generic error on failure (no enumeration).
+      description: Authenticate with email/password; generic error on failure (no
+        enumeration).
+      operationId: post_auth_login
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{email, password}'
+      responses:
+        '200':
+          description: '{sessionToken}'
+  /auth/logout:
+    post:
+      summary: End the current session.
+      description: End the current session.
+      operationId: post_auth_logout
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{}'
+      responses:
+        '200':
+          description: '204'
+      security:
+      - bearerAuth: []
+  /auth/oauth/google:
+    get:
+      summary: Begin Google OAuth sign-in/sign-up; captures consent on first use.
+      description: Begin Google OAuth sign-in/sign-up; captures consent on first use.
+      operationId: get_auth_oauth_google
+      parameters: []
+      responses:
+        '200':
+          description: redirect
+  /auth/password-reset/confirm:
+    post:
+      summary: Set a new password using a valid single-use token.
+      description: Set a new password using a valid single-use token.
+      operationId: post_auth_password_reset_confirm
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{token, newPassword}'
+      responses:
+        '200':
+          description: '204'
+  /auth/password-reset/request:
+    post:
+      summary: Send a time-limited reset link; neutral confirmation regardless of
+        email existence.
+      description: Send a time-limited reset link; neutral confirmation regardless
+        of email existence.
+      operationId: post_auth_password_reset_request
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{email}'
+      responses:
+        '200':
+          description: '202'
+  /auth/register:
+    post:
+      summary: Register a buyer or organizer with email/password after required consent;
+        rejects duplicate email, weak password, or mis
+      description: Register a buyer or organizer with email/password after required
+        consent; rejects duplicate email, weak password, or missing consent.
+      operationId: post_auth_register
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{email, password, role, displayName?, consents[]}'
+      responses:
+        '200':
+          description: '{userId, role, sessionToken}'
+  /events:
+    get:
+      summary: Public listing/search of published events by term, city, date, category;
+        excludes drafts and past events.
+      description: Public listing/search of published events by term, city, date,
+        category; excludes drafts and past events.
+      operationId: get_events
+      parameters: []
+      responses:
+        '200':
+          description: '{events[]}'
+    post:
+      summary: Create an event draft owned by the organizer; rejects missing fields
+        or past date/time.
+      description: Create an event draft owned by the organizer; rejects missing fields
+        or past date/time.
+      operationId: post_events
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{title, description, venue, city, startsAt}'
+      responses:
+        '200':
+          description: '{eventId, status}'
+      security:
+      - bearerAuth: []
+  /events/{id}:
+    get:
+      summary: Public event detail with ticket types and availability; unpublished
+        events not accessible.
+      description: Public event detail with ticket types and availability; unpublished
+        events not accessible.
+      operationId: get_events_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '{event, ticketTypes[]}'
+    put:
+      summary: Edit an owned event; owner-only.
+      description: Edit an owned event; owner-only.
+      operationId: put_events_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{title?, description?, venue?, startsAt?}'
+      responses:
+        '200':
+          description: '{event}'
+      security:
+      - bearerAuth: []
+  /events/{id}/publish:
+    post:
+      summary: Publish a complete draft (indexes it for search); blocks with missing-field
+        list if incomplete.
+      description: Publish a complete draft (indexes it for search); blocks with missing-field
+        list if incomplete.
+      operationId: post_events_id_publish
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{}'
+      responses:
+        '200':
+          description: '{status}'
+      security:
+      - bearerAuth: []
+  /events/{id}/ticket-types:
+    post:
+      summary: Add a general-admission ticket type with non-negative price and positive
+        quantity.
+      description: Add a general-admission ticket type with non-negative price and
+        positive quantity.
+      operationId: post_events_id_ticket_types
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{name, price, totalQuantity}'
+      responses:
+        '200':
+          description: '{ticketTypeId}'
+      security:
+      - bearerAuth: []
+  /events/{id}/ticket-types/{ttId}:
+    put:
+      summary: Edit a ticket type; quantity cannot drop below sold_quantity.
+      description: Edit a ticket type; quantity cannot drop below sold_quantity.
+      operationId: put_events_id_ticket_types_ttid
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: ttId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{name?, price?, totalQuantity?}'
+      responses:
+        '200':
+          description: '{ticketType}'
+      security:
+      - bearerAuth: []
+  /events/{id}/unpublish:
+    post:
+      summary: Remove from public browsing and stop new bookings; existing bookings
+        stay valid.
+      description: Remove from public browsing and stop new bookings; existing bookings
+        stay valid.
+      operationId: post_events_id_unpublish
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{}'
+      responses:
+        '200':
+          description: '{status}'
+      security:
+      - bearerAuth: []
+  /me/consents:
+    get:
+      summary: View current consent records.
+      description: View current consent records.
+      operationId: get_me_consents
+      parameters: []
+      responses:
+        '200':
+          description: '{consents[]}'
+      security:
+      - bearerAuth: []
+  /me/consents/withdraw:
+    post:
+      summary: Withdraw consent for a purpose and record the withdrawal; returns what
+        stops and what is lawfully retained.
+      description: Withdraw consent for a purpose and record the withdrawal; returns
+        what stops and what is lawfully retained.
+      operationId: post_me_consents_withdraw
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{purpose}'
+      responses:
+        '200':
+          description: '{withdrawn, retained[], reason}'
+      security:
+      - bearerAuth: []
+  /me/orders:
+    get:
+      summary: Buyer's own orders with status and references.
+      description: Buyer's own orders with status and references.
+      operationId: get_me_orders
+      parameters: []
+      responses:
+        '200':
+          description: '{orders[]}'
+      security:
+      - bearerAuth: []
+  /me/tickets:
+    get:
+      summary: Buyer's QR tickets for confirmed paid orders only.
+      description: Buyer's QR tickets for confirmed paid orders only.
+      operationId: get_me_tickets
+      parameters: []
+      responses:
+        '200':
+          description: '{tickets[]}'
+      security:
+      - bearerAuth: []
+  /orders:
+    post:
+      summary: Create a pending order for selected ticket types within availability;
+        places Redis holds.
+      description: Create a pending order for selected ticket types within availability;
+        places Redis holds.
+      operationId: post_orders
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{eventId, lineItems[]}'
+      responses:
+        '200':
+          description: '{orderId, orderReference, total, razorpayOrderId}'
+      security:
+      - bearerAuth: []
+  /organizer/events/{id}/attendees:
+    get:
+      summary: Owner-only attendee list from confirmed orders with empty state.
+      description: Owner-only attendee list from confirmed orders with empty state.
+      operationId: get_organizer_events_id_attendees
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '{attendees[]}'
+      security:
+      - bearerAuth: []
+  /organizer/events/{id}/sales:
+    get:
+      summary: 'Owner-only sales counts: sold, remaining, gross revenue from confirmed
+        orders.'
+      description: 'Owner-only sales counts: sold, remaining, gross revenue from confirmed
+        orders.'
+      operationId: get_organizer_events_id_sales
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '{soldCount, remaining, grossRevenue}'
+      security:
+      - bearerAuth: []
+  /payments/webhook:
+    post:
+      summary: 'Razorpay webhook: verify signature, confirm order under row lock,
+        deduct inventory, record commission, enqueue QR/email.'
+      description: 'Razorpay webhook: verify signature, confirm order under row lock,
+        deduct inventory, record commission, enqueue QR/email.'
+      operationId: post_payments_webhook
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{razorpay signed payload}'
+      responses:
+        '200':
+          description: '200'
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    users:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        password_hash:
+          type: string
+        role:
+          type: string
+        display_name:
+          type: string
+        auth_provider:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - email
+      - role
+      - auth_provider
+      - created_at
+    consents:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        purpose:
+          type: string
+        granted:
+          type: boolean
+        granted_at:
+          type: string
+          format: date-time
+        withdrawn_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - user_id
+      - purpose
+      - granted
+      - granted_at
+    password_reset_tokens:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        token_hash:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        used_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - user_id
+      - token_hash
+      - expires_at
+    events:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organizer_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        venue:
+          type: string
+        city:
+          type: string
+        starts_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+        banner_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - organizer_id
+      - title
+      - venue
+      - starts_at
+      - status
+      - created_at
+    ticket_types:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        price:
+          type: number
+        total_quantity:
+          type: integer
+        sold_quantity:
+          type: integer
+      required:
+      - id
+      - event_id
+      - name
+      - price
+      - total_quantity
+      - sold_quantity
+    orders:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        buyer_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          format: uuid
+        order_reference:
+          type: string
+        status:
+          type: string
+        total_amount:
+          type: number
+        commission_amount:
+          type: number
+        razorpay_order_id:
+          type: string
+        razorpay_payment_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        paid_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - buyer_id
+      - event_id
+      - order_reference
+      - status
+      - total_amount
+      - created_at
+    order_items:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        order_id:
+          type: string
+          format: uuid
+        ticket_type_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+      required:
+      - id
+      - order_id
+      - ticket_type_id
+      - quantity
+      - unit_price
+    tickets:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        order_item_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          format: uuid
+        qr_identifier:
+          type: string
+        qr_image_url:
+          type: string
+        status:
+          type: string
+      required:
+      - id
+      - order_item_id
+      - event_id
+      - qr_identifier
+      - status
+    audit_logs:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        action:
+          type: string
+        resource:
+          type: string
+        ip_address:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - action
+      - resource
+      - created_at

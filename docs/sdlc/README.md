@@ -5,7 +5,7 @@
 <!-- sdlc:auto:start overview -->
 event booking app
 
-**Documentation version:** v1
+**Documentation version:** v2
 <!-- sdlc:auto:end overview -->
 
 ## Contents
@@ -14,14 +14,14 @@ event booking app
 | Document | State |
 |---|---|
 | [Requirements](requirements/README.md) | v1 approved |
-| [Architecture](architecture/README.md) | 1 entry |
+| [Architecture](architecture/README.md) | 28 entries |
 | [Development](development/README.md) | 1 entry |
 | [Testing](testing/README.md) | 1 entry |
 | [Deployment](deployment/README.md) | 1 entry |
 | [Maintenance](maintenance/README.md) | 1 entry |
-| [Data model](architecture/data-model.md) | not generated yet |
-| [API (OpenAPI)](architecture/api/openapi.yaml) | not generated yet |
-| [Decisions (ADRs)](architecture/adr/README.md) | 0 decisions |
+| [Data model](architecture/data-model.md) | generated |
+| [API (OpenAPI)](architecture/api/openapi.yaml) | generated |
+| [Decisions (ADRs)](architecture/adr/README.md) | 4 decisions |
 | [Sprint plan](development/sprint-plan.md) | not generated yet |
 | [Developer guide](development/developer-guide.md) | not generated yet |
 | [API reference](development/api-reference.md) | 0 routes |
@@ -31,7 +31,7 @@ event booking app
 | [Runbook](deployment/runbook.md) | not deployed yet |
 | [Release notes](deployment/release-notes.md) | 0 releases |
 | [Traceability matrix](traceability-matrix.md) | 23 requirements |
-| [Changelog](CHANGELOG.md) | 1 version |
+| [Changelog](CHANGELOG.md) | 2 versions |
 <!-- sdlc:auto:end contents -->
 
 ## Open gaps
@@ -50,7 +50,10 @@ event booking app
 
 ### Architecture
 
-- Architecture phase has not started; no design, diagrams, or ADRs have been provided to document.
+- Architecture input does not explicitly map components/endpoints to individual US-001..US-023 requirement ids; only NFR-001, NFR-002, NFR-008, NFR-009, NFR-011, NFR-012 are referenced by id in the source, so full requirement-to-architecture traceability should be confirmed manually.
+- No date is recorded for when this architecture version was approved or by whom.
+- No explicit foreign-key/index/constraint details are given beyond the row-level locking behavior on ticket_types.
+- No details given on autoscaling policy, multi-AZ setup, networking/VPC layout, or disaster-recovery plan for this deployment.
 
 ### Development
 
